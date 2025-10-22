@@ -1,2 +1,229 @@
-# er-harness-validation
-The ER Harness is a validation framework designed to evaluate the accuracy and reliability of Entity Resolution (ER) outputs by comparing them against a known ground truth dataset
+# ER Harness Validation
+
+A comprehensive validation framework designed to evaluate the accuracy and reliability of Entity Resolution (ER) outputs by comparing them against known ground truth datasets.
+
+## 🎯 Overview
+
+The ER Harness Validation framework provides automated validation of entity resolution results through:
+
+- **MD5 Hash Comparison**: Fast 1:1 record matching using cryptographic hashes
+- **Column-Level Analysis**: Detailed comparison of individual fields
+- **Error Matrix Classification**: TP (True Positive), TN (True Negative), FP (False Positive), FN (False Negative)
+- **Mismatch Pattern Analysis**: Identification and categorization of data discrepancies
+- **Token-Based Name Matching**: Smart handling of compound names (e.g., "Kirby-Jones")
+
+## 📁 Project Structure
+
+```
+er-harness-validation/
+│
+├── src/                          # Source code
+│   ├── __init__.py
+│   ├── core/                     # Core validation logic
+│   │   ├── __init__.py
+│   │   ├── md5_generator.py     # MD5 hash generation
+│   │   ├── record_matcher.py    # Record matching logic
+│   │   └── validation_analyzer.py # Mismatch analysis
+│   │
+│   └── utils/                    # Utility modules
+│       ├── __init__.py
+│       ├── data_loader.py       # Data loading utilities
+│       └── data_transformer.py  # Data transformation helpers
+│
+├── config/                       # Configuration files
+│   └── config.py                # Main configuration
+│
+├── tests/                        # Unit tests
+│
+├── docs/                         # Documentation
+│
+├── main.py                       # Main orchestration script
+├── ER Harness.py                # Original Databricks notebook
+├── setup.py                      # Package setup
+├── requirements.txt              # Python dependencies
+├── .gitignore                    # Git ignore rules
+└── README.md                     # This file
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.8 or higher
+- Apache Spark 3.0+
+- Databricks environment (optional)
+
+### Installation
+
+1. **Clone the repository**:
+```bash
+git clone https://github.com/emeron1234/er-harness-validation.git
+cd er-harness-validation
+```
+
+2. **Install dependencies**:
+```bash
+pip install -r requirements.txt
+```
+
+3. **Install the package** (optional):
+```bash
+pip install -e .
+```
+
+### Configuration
+
+Edit `config/config.py` to customize:
+
+- **Database tables**: Set paths to your ER output and truth tables
+- **Matching rules**: Adjust score thresholds for entity matching
+- **Column mappings**: Define which columns to compare
+- **Exception pairs**: Specify test cases with expected different results
+
+Key configuration sections:
+
+```python
+# Database Configuration
+DATABASE_CONFIG = {
+    "er_output_table": "your.database.er_output_table",
+    "truth_table": "your.database.truth_table",
+}
+
+# ER Matching Rules
+ER_MATCHING_RULES = {
+    "er_score_threshold": 0.8,
+    "first_name_score": 0.12,
+    # ... other thresholds
+}
+```
+
+## 💻 Usage
+
+### Basic Usage
+
+```python
+from main import ERHarnessValidator
+
+# Initialize validator
+validator = ERHarnessValidator()
+
+# Run validation
+results = validator.run_validation()
+
+# Display results
+validator.display_results()
+
+# Save results
+validator.save_results("/path/to/output", format="parquet")
+```
+
+### Command Line
+
+```bash
+python main.py
+```
+
+### In Databricks Notebook
+
+```python
+%run ./main.py
+
+validator = ERHarnessValidator()
+final_df = validator.run_validation()
+validator.display_results()
+```
+
+## 📊 Output
+
+The validation produces a comprehensive dataset with the following columns:
+
+| Column | Description |
+|--------|-------------|
+| `source_primary_key` | Primary key from source data |
+| `target_primary_key` | Primary key from target data |
+| `target_entity_id` | Resolved entity identifier (WE_PID) |
+| `validation_status` | Match or Mismatch |
+| `error_matrix` | TP, TN, FP, or FN classification |
+| `mismatch_type` | Detailed categorization of mismatches |
+| `mismatches_code` | Binary code showing which columns mismatch |
+| `mismatches_columns` | List of mismatched column names |
+| `mismatch_deviation` | Percentage of columns that don't match |
+| `batch_id` | Timestamp-based batch identifier |
+
+### Mismatch Types
+
+- **NA**: Perfect match
+- **Only WE_PID mismatch**: Only entity ID differs
+- **WE_PID and other column mismatch**: Entity ID and data fields differ
+- **Other columns mismatch**: Data fields differ, entity ID matches
+- **Extra Record in ER Output**: Record exists in ER but not in truth
+- **Record Missing from ER Output**: Record exists in truth but not in ER
+
+## 🏗️ Architecture
+
+### Core Modules
+
+1. **md5_generator.py**: Generates cryptographic hashes for fast comparison
+2. **record_matcher.py**: Implements matching algorithms including token-based name matching
+3. **validation_analyzer.py**: Analyzes mismatch patterns and categorizes results
+
+### Utility Modules
+
+1. **data_loader.py**: Handles data ingestion and preprocessing
+2. **data_transformer.py**: Provides data transformation utilities
+
+### Validation Workflow
+
+```
+1. Load Data → Load ER output and truth datasets
+2. Generate Hashes → Create MD5 hashes for comparison
+3. Match Records → Identify matches and mismatches
+4. Find Extra Records → Detect records unique to each dataset
+5. Analyze Patterns → Categorize and quantify mismatches
+6. Generate Report → Create comprehensive validation output
+```
+
+## 🧪 Testing
+
+Run tests using:
+
+```bash
+pytest tests/
+```
+
+## 📝 Development
+
+### Adding New Validation Rules
+
+1. Update `config/config.py` with new thresholds
+2. Modify matching logic in `src/core/record_matcher.py`
+3. Update validation analysis in `src/core/validation_analyzer.py`
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+This project is proprietary. All rights reserved.
+
+## 👥 Authors
+
+- Your Team
+
+## 🤝 Support
+
+For issues or questions:
+- Create an issue on GitHub
+- Contact: your.email@example.com
+
+## 🔄 Version History
+
+- **v1.0.0** (2025-10-22): Initial release with full validation framework
+
+---
+
+**Built with ❤️ using PySpark and Python**
