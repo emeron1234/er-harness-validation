@@ -7,10 +7,10 @@ A comprehensive validation framework designed to evaluate the accuracy and relia
 The ER Harness Validation framework provides automated validation of entity resolution results through:
 
 - **MD5 Hash Comparison**: Fast 1:1 record matching using cryptographic hashes
-- **Column-Level Analysis**: Detailed comparison of individual fields
 - **Error Matrix Classification**: TP (True Positive), TN (True Negative), FP (False Positive), FN (False Negative)
-- **Mismatch Pattern Analysis**: Identification and categorization of data discrepancies
+- **Column-Level Analysis**: Detailed comparison of each individual columns
 - **Token-Based Name Matching**: Smart handling of compound names (e.g., "Kirby-Jones")
+- **Mismatch Pattern Analysis**: Identification and categorization of data discrepancies
 
 ## 📁 Project Structure
 
@@ -183,14 +183,6 @@ The validation produces a comprehensive dataset with the following columns:
 6. Generate Report → Create comprehensive validation output
 ```
 
-## 🧪 Testing
-
-Run tests using:
-
-```bash
-pytest tests/
-```
-
 ## 📝 Development
 
 ### Adding New Validation Rules
@@ -199,31 +191,12 @@ pytest tests/
 2. Modify matching logic in `src/core/record_matcher.py`
 3. Update validation analysis in `src/core/validation_analyzer.py`
 
-### Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📄 License
-
-This project is proprietary. All rights reserved.
-
 ## 👥 Authors
 
-- Your Team
-
-## 🤝 Support
-
-For issues or questions:
-- Create an issue on GitHub
-- Contact: your.email@example.com
+- Abdul Haziq
 
 ## 🔄 Version History
 
 - **v1.0.0** (2025-10-22): Initial release with full validation framework
 
 ---
-
-**Built with ❤️ using PySpark and Python**
